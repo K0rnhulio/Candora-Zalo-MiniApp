@@ -16,7 +16,7 @@ import Collapse from "@/components/collapse";
 import RelatedProducts from "./related-products";
 import { useAddToCart } from "@/hooks";
 import toast from "react-hot-toast";
-import { Color, Size } from "types";
+import { Color, Size } from "@/types";
 
 export default function ProductDetailPage() {
   const { id } = useParams();
