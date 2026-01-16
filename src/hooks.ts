@@ -1,12 +1,22 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { MutableRefObject, useLayoutEffect, useMemo, useState } from "react";
+import { MutableRefObject, useCallback, useLayoutEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { UIMatch, useMatches } from "react-router-dom";
-import { cartState, cartTotalState } from "@/state";
-import { Cart, CartItem, Product, SelectedOptions } from "@/types";
-import { getDefaultOptions, isIdentical } from "@/utils/cart";
-import { getConfig } from "@/utils/template";
-import { openChat, purchase } from "zmp-sdk";
+import { UIMatch, useMatches, useNavigate } from "react-router-dom";
+import {
+  languageAtom,
+  translationsAtom,
+  appStateAtom,
+  currentQuestionIndexAtom,
+  answersAtom,
+  resultAtom,
+  resetQuizAtom,
+  startQuizAtom,
+  goBackAtom,
+  totalQuestionsAtom,
+} from "@/state";
+import { Language, AppState, UserAnswers, BlendResult, UserInfo } from "@/types";
+import { generateBlend } from "@/services/geminiService";
+import { saveToDatabase } from "@/services/dbService";
 
 export function useRealHeight(
   element: MutableRefObject<HTMLDivElement | null>,
@@ -31,114 +41,100 @@ export function useRealHeight(
   return height;
 }
 
-export function useAddToCart(product: Product, editingCartItemId?: number) {
-  const [cart, setCart] = useAtom(cartState);
-  const editing = useMemo(
-    () => cart.find((item) => item.id === editingCartItemId),
-    [cart, editingCartItemId]
-  );
+// Language hook
+export function useLanguage() {
+  const [language, setLanguage] = useAtom(languageAtom);
+  const t = useAtomValue(translationsAtom);
 
-  const [options, setOptions] = useState<SelectedOptions>(
-    editing ? editing.options : getDefaultOptions(product)
-  );
+  return { language, setLanguage, t };
+}
 
-  function handleReplace(quantity: number, cart: Cart, editing: CartItem) {
-    if (quantity === 0) {
-      // the user wants to remove this item.
-      cart.splice(cart.indexOf(editing), 1);
+// Quiz flow hooks
+export function useQuiz() {
+  const navigate = useNavigate();
+  const [appState, setAppState] = useAtom(appStateAtom);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useAtom(currentQuestionIndexAtom);
+  const [answers, setAnswers] = useAtom(answersAtom);
+  const [result, setResult] = useAtom(resultAtom);
+  const totalQuestions = useAtomValue(totalQuestionsAtom);
+  const { language, t } = useLanguage();
+  const resetQuiz = useSetAtom(resetQuizAtom);
+  const startQuiz = useSetAtom(startQuizAtom);
+  const goBack = useSetAtom(goBackAtom);
+
+  const questions = t.quiz.questions;
+  const currentQuestion = questions[currentQuestionIndex];
+
+  const handleAnswer = useCallback(async (answer: string) => {
+    const questionId = questions[currentQuestionIndex].id;
+    const newAnswers = { ...answers, [questionId]: answer };
+    setAnswers(newAnswers);
+
+    if (currentQuestionIndex < questions.length - 1) {
+      // Small delay for UX feel
+      setTimeout(() => {
+        setCurrentQuestionIndex(prev => prev + 1);
+      }, 300);
     } else {
-      const existed = cart.find(
-        (item) =>
-          item.id != editingCartItemId &&
-          item.product.id === product.id &&
-          isIdentical(item.options, options)
-      );
-      if (existed) {
-        // there's another identical item in the cart; let's remove it and update the quantity in the editing item.
-        cart.splice(cart.indexOf(existed), 1);
-      }
-      cart.splice(cart.indexOf(editing), 1, {
-        ...editing,
-        options,
-        quantity: existed
-          ? existed.quantity + quantity // updating the quantity of the identical item.
-          : quantity,
-      });
-    }
-  }
+      // Quiz finished, navigate to loading and generate content
+      setAppState(AppState.LOADING);
+      navigate('/loading');
 
-  function handleAppend(quantity: number, cart: Cart) {
-    const existed = cart.find(
-      (item) =>
-        item.product.id === product.id && isIdentical(item.options, options)
-    );
-    if (existed) {
-      // merging with another identical item in the cart.
-      cart.splice(cart.indexOf(existed), 1, {
-        ...existed,
-        quantity: existed.quantity + quantity,
-      });
+      try {
+        const blendResult = await generateBlend(newAnswers, language);
+        setResult(blendResult);
+        // Once generated, move to contact form
+        setAppState(AppState.CONTACT_FORM);
+        navigate('/contact');
+      } catch (e) {
+        console.error("Failed to generate", e);
+        toast.error("Failed to generate your blend. Please try again.");
+        setAppState(AppState.WELCOME);
+        navigate('/');
+      }
+    }
+  }, [answers, currentQuestionIndex, language, questions, navigate, setAnswers, setAppState, setCurrentQuestionIndex, setResult]);
+
+  const handleContactSubmit = useCallback(async (userInfo: UserInfo) => {
+    if (result) {
+      await saveToDatabase(userInfo, answers, result);
+      setAppState(AppState.RESULT);
+      navigate('/result');
+    }
+  }, [result, answers, setAppState, navigate]);
+
+  const handleBack = useCallback(() => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(prev => prev - 1);
     } else {
-      // this item is new, appending it to the cart.
-      cart.push({
-        id: cart.length + 1,
-        product,
-        options,
-        quantity,
-      });
+      setAppState(AppState.WELCOME);
+      navigate('/');
     }
-  }
+  }, [currentQuestionIndex, setCurrentQuestionIndex, setAppState, navigate]);
 
-  const addToCart = (quantity: number) => {
-    setCart((cart) => {
-      const res = [...cart];
-      if (editing) {
-        handleReplace(quantity, res, editing);
-      } else {
-        handleAppend(quantity, res);
-      }
-      return res;
-    });
-  };
+  const handleRestart = useCallback(() => {
+    resetQuiz();
+    navigate('/');
+  }, [resetQuiz, navigate]);
 
-  return { addToCart, options, setOptions };
-}
+  const handleStartQuiz = useCallback(() => {
+    startQuiz();
+    navigate('/quiz');
+  }, [startQuiz, navigate]);
 
-export function useCustomerSupport() {
-  return () =>
-    openChat({
-      type: "oa",
-      id: getConfig((config) => config.template.oaIDtoOpenChat),
-    });
-}
-
-export function useToBeImplemented() {
-  return () =>
-    toast("Chức năng dành cho các bên tích hợp phát triển...", {
-      icon: "🛠️",
-    });
-}
-
-export function useCheckout() {
-  const { totalAmount } = useAtomValue(cartTotalState);
-  const setCart = useSetAtom(cartState);
-  return async () => {
-    try {
-      await purchase({
-        amount: totalAmount,
-        desc: "Thanh toán đơn hàng",
-        method: "",
-      });
-      toast.success("Thanh toán thành công. Cảm ơn bạn đã mua hàng!", {
-        icon: "🎉",
-      });
-      setCart([]);
-    } catch (error) {
-      toast.error(
-        "Thanh toán thất bại. Vui lòng kiểm tra nội dung lỗi bên trong Console."
-      );
-      console.warn(error);
-    }
+  return {
+    appState,
+    currentQuestionIndex,
+    currentQuestion,
+    questions,
+    totalQuestions,
+    answers,
+    result,
+    handleAnswer,
+    handleContactSubmit,
+    handleBack,
+    handleRestart,
+    handleStartQuiz,
   };
 }
 

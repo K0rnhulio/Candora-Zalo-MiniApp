@@ -1,109 +1,88 @@
 import { atom } from "jotai";
-import { atomFamily, unwrap } from "jotai/utils";
-import { Cart, Category, Color, Product } from "@/types";
-import { requestWithFallback } from "@/utils/request";
-import { getUserInfo } from "zmp-sdk";
+import { atomWithStorage } from "jotai/utils";
+import { Language, AppState, UserAnswers, BlendResult, UserInfo } from "./types";
+import { translations, Translations } from "./i18n";
 
-export const userState = atom(() =>
-  getUserInfo({
-    avatarType: "normal",
-  })
-);
+// Language state - persisted to localStorage
+export const languageAtom = atomWithStorage<Language>('candora_language', 'en');
 
-export const bannersState = atom(() =>
-  requestWithFallback<string[]>("/banners", [])
-);
-
-export const tabsState = atom(["Tất cả", "Nam", "Nữ", "Trẻ em"]);
-
-export const selectedTabIndexState = atom(0);
-
-export const categoriesState = atom(() =>
-  requestWithFallback<Category[]>("/categories", [])
-);
-
-export const categoriesStateUpwrapped = unwrap(
-  categoriesState,
-  (prev) => prev ?? []
-);
-
-export const productsState = atom(async (get) => {
-  const categories = await get(categoriesState);
-  const products = await requestWithFallback<
-    (Product & { categoryId: number })[]
-  >("/products", []);
-  return products.map((product) => ({
-    ...product,
-    category: categories.find(
-      (category) => category.id === product.categoryId
-    )!,
-  }));
+// Derived atom for translations
+export const translationsAtom = atom<Translations>((get) => {
+  const language = get(languageAtom);
+  return translations[language];
 });
 
-export const flashSaleProductsState = atom((get) => get(productsState));
+// App state
+export const appStateAtom = atom<AppState>(AppState.WELCOME);
 
-export const recommendedProductsState = atom((get) => get(productsState));
+// Quiz state
+export const currentQuestionIndexAtom = atom<number>(0);
 
-export const sizesState = atom(["S", "M", "L", "XL"]);
+// User answers
+export const answersAtom = atom<UserAnswers>({});
 
-export const selectedSizeState = atom<string | undefined>(undefined);
+// Blend result
+export const resultAtom = atom<BlendResult | null>(null);
 
-export const colorsState = atom<Color[]>([
-  {
-    name: "Đỏ",
-    hex: "#FFC7C7",
-  },
-  {
-    name: "Xanh dương",
-    hex: "#DBEBFF",
-  },
-  {
-    name: "Xanh lá",
-    hex: "#D1F0DB",
-  },
-  {
-    name: "Xám",
-    hex: "#D9E2ED",
-  },
-]);
+// User info from contact form
+export const userInfoAtom = atom<UserInfo | null>(null);
 
-export const selectedColorState = atom<Color | undefined>(undefined);
+// Loading state for async operations
+export const isLoadingAtom = atom<boolean>(false);
 
-export const productState = atomFamily((id: number) =>
-  atom(async (get) => {
-    const products = await get(productsState);
-    return products.find((product) => product.id === id);
-  })
+// Error state
+export const errorAtom = atom<string | null>(null);
+
+// Computed atom: current question
+export const currentQuestionAtom = atom((get) => {
+  const t = get(translationsAtom);
+  const index = get(currentQuestionIndexAtom);
+  return t.quiz.questions[index];
+});
+
+// Computed atom: total questions
+export const totalQuestionsAtom = atom((get) => {
+  const t = get(translationsAtom);
+  return t.quiz.questions.length;
+});
+
+// Computed atom: quiz progress percentage
+export const quizProgressAtom = atom((get) => {
+  const current = get(currentQuestionIndexAtom) + 1;
+  const total = get(totalQuestionsAtom);
+  return (current / total) * 100;
+});
+
+// Action atoms for state management
+export const resetQuizAtom = atom(
+  null,
+  (get, set) => {
+    set(appStateAtom, AppState.WELCOME);
+    set(currentQuestionIndexAtom, 0);
+    set(answersAtom, {});
+    set(resultAtom, null);
+    set(userInfoAtom, null);
+    set(errorAtom, null);
+  }
 );
 
-export const cartState = atom<Cart>([]);
+export const startQuizAtom = atom(
+  null,
+  (get, set) => {
+    set(appStateAtom, AppState.QUIZ);
+    set(currentQuestionIndexAtom, 0);
+    set(answersAtom, {});
+  }
+);
 
-export const selectedCartItemIdsState = atom<number[]>([]);
-
-export const checkoutItemsState = atom((get) => {
-  const ids = get(selectedCartItemIdsState);
-  const cart = get(cartState);
-  return cart.filter((item) => ids.includes(item.id));
-});
-
-export const cartTotalState = atom((get) => {
-  const items = get(checkoutItemsState);
-  return {
-    totalItems: items.length,
-    totalAmount: items.reduce(
-      (total, item) => total + item.product.price * item.quantity,
-      0
-    ),
-  };
-});
-
-export const keywordState = atom("");
-
-export const searchResultState = atom(async (get) => {
-  const keyword = get(keywordState);
-  const products = await get(productsState);
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  return products.filter((product) =>
-    product.name.toLowerCase().includes(keyword.toLowerCase())
-  );
-});
+export const goBackAtom = atom(
+  null,
+  (get, set) => {
+    const currentIndex = get(currentQuestionIndexAtom);
+    if (currentIndex > 0) {
+      set(currentQuestionIndexAtom, currentIndex - 1);
+    } else {
+      set(appStateAtom, AppState.WELCOME);
+    }
+  }
+);

@@ -8,13 +8,16 @@ import { ScrollRestoration } from "./scroll-restoration";
 
 export default function Layout() {
   return (
-    <div className="w-screen h-screen flex flex-col bg-background text-foreground">
+    <div
+      className="w-screen h-screen flex flex-col bg-[#FCFCFC] text-gray-900"
+      style={{ paddingTop: 'env(safe-area-inset-top)' }}
+    >
       <Header />
-      <div className="flex-1 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto">
         <Suspense fallback={<PageSkeleton />}>
           <Outlet />
         </Suspense>
-      </div>
+      </main>
       <Footer />
       <Toaster
         containerClassName="toast-container"

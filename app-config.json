@@ -1,8 +1,8 @@
 {
   "app": {
-    "title": "Clothing store",
+    "title": "Candora - Scent Master",
     "textColor": "black",
-    "headerColor": "#ffffff",
+    "headerColor": "#FCFCFC",
     "statusBar": "normal",
     "actionBarHidden": true,
     "hideAndroidBottomNavigationBar": false,
@@ -13,7 +13,7 @@
   "listSyncJS": [],
   "listAsyncJS": [],
   "template": {
-    "name": "zaui-fashion",
+    "name": "candora-scent-master",
     "apiUrl": "",
     "oaIDtoOpenChat": "4318657068771012646"
   }

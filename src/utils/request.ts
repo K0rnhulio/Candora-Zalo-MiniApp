@@ -1,23 +1,15 @@
-import { getConfig } from "./template";
-
-const API_URL = getConfig((config) => config.template.apiUrl);
-
-const mockUrls = import.meta.glob<{ default: string }>("../mock/*.json", {
-  query: "url",
-  eager: true,
-});
+const API_URL = window.APP_CONFIG?.template?.apiUrl || '';
 
 export async function request<T>(
   path: string,
   options?: RequestInit
 ): Promise<T> {
-  const url = API_URL
-    ? `${API_URL}${path}`
-    : mockUrls[`../mock${path}.json`]?.default;
+  const url = API_URL ? `${API_URL}${path}` : '';
 
-  if (!API_URL) {
-    await new Promise((resolve) => setTimeout(resolve, 500));
+  if (!url) {
+    throw new Error('API URL not configured');
   }
+
   const response = await fetch(url, options);
   return response.json() as T;
 }

@@ -1,50 +1,51 @@
-import { useAtomValue } from "jotai";
-import {
-  UIMatch,
-  useLocation,
-  useMatches,
-  useNavigate,
-} from "react-router-dom";
-import { categoriesStateUpwrapped } from "@/state";
-import headerLogoImage from "@/static/header-logo.svg";
-import { BackIcon } from "./vectors";
-import { useMemo } from "react";
-import { useRouteHandle } from "@/hooks";
+import { useLanguage } from "@/hooks";
 
 export default function Header() {
-  const categories = useAtomValue(categoriesStateUpwrapped);
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [handle, match] = useRouteHandle();
-
-  const title = useMemo(() => {
-    if (handle) {
-      if (typeof handle.title === "function") {
-        return handle.title({ categories, params: match.params });
-      } else {
-        return handle.title;
-      }
-    }
-  }, [handle, categories]);
-
-  const showBack = location.key !== "default" && handle?.back !== false;
-
-  if (handle?.logo) {
-    return (
-      <div className="h-14 w-full flex items-center px-4 py-2">
-        <img src={headerLogoImage} className="max-h-full flex-none" />
-      </div>
-    );
-  }
+  const { language, setLanguage } = useLanguage();
 
   return (
-    <div className="h-12 w-full flex items-center pl-2 pr-[106px] py-2 space-x-1">
-      {showBack && (
-        <div className="p-2 cursor-pointer" onClick={() => navigate(-1)}>
-          <BackIcon />
-        </div>
-      )}
-      <div className="text-xl font-medium truncate">{title}</div>
-    </div>
+    <header className="py-3 px-4 flex justify-between items-center border-b border-gray-100 bg-[#FCFCFC]">
+      {/* Language Selector */}
+      <div className="flex items-center gap-1 ">
+        <button
+          onClick={() => setLanguage("en")}
+          className={`text-xs uppercase tracking-wider px-1 py-1 transition-colors ${
+            language === "en" ? "text-gold-500 font-bold" : "text-gray-400"
+          }`}
+        >
+          EN
+        </button>
+        <span className="text-gray-300 text-xs">|</span>
+        <button
+          onClick={() => setLanguage("vi")}
+          className={`text-xs uppercase tracking-wider px-1 py-1 transition-colors ${
+            language === "vi" ? "text-gold-500 font-bold" : "text-gray-400"
+          }`}
+        >
+          VI
+        </button>
+        <span className="text-gray-300 text-xs">|</span>
+        <button
+          onClick={() => setLanguage("ru")}
+          className={`text-xs uppercase tracking-wider px-1 py-1 transition-colors ${
+            language === "ru" ? "text-gold-500 font-bold" : "text-gray-400"
+          }`}
+        >
+          RU
+        </button>
+      </div>
+
+      {/* Logo */}
+      <div className="flex items-center">
+        <img
+          src="https://candora.b-cdn.net/CandoraLogo.svg"
+          alt="Candora Logo"
+          className="h-7 w-auto"
+        />
+      </div>
+
+      {/* Empty space for balance */}
+      <div className="w-20"></div>
+    </header>
   );
 }
