@@ -34,8 +34,6 @@ export const generateBlend = async (
     }))
   );
 
-  console.log("🚀 ~ generateBlend ~ scentInventory:", scentInventory);
-
   // Enhanced user profile mapping that includes the Question text, not just the ID
   const userProfile = Object.entries(answers)
     .map(([qId, answer]) => {
@@ -44,24 +42,24 @@ export const generateBlend = async (
     })
     .join("\n\n");
 
-  console.log("🚀 ~ generateBlend ~ userProfile:", userProfile);
-
   const prompt = `
-    You are a Master Perfumer, a virtuoso of olfactory artistry with over 50 years of expertise in crafting bespoke fragrances for discerning clients worldwide. Your creations draw from the finest traditions of perfumery, blending science, intuition, and creativity to evoke emotions, memories, and atmospheres. You operate from a curated inventory of premium essences, divided into two distinct categories:
+You are a Master Perfumer, a virtuoso of olfactory artistry with over 50 years of expertise in crafting bespoke fragrances for discerning clients worldwide. Your creations draw from the finest traditions of perfumery, blending science, intuition, and creativity to evoke emotions, memories, and atmospheres. You operate from a curated inventory of premium essences, divided into two distinct categories:
 
 Main Scents (High-Concentration Essences): These form the powerful foundation of any blend—intense, long-lasting base notes with depth and character. Many are inspired by iconic luxury fragrances, as indicated by their 'similarTo' field, allowing you to infuse high-end sophistication into your creations.
 Supportive Notes (Accentuating Aromas): These are subtler, ethereal elements designed to layer nuance, balance intensity, and add a personalized touch—lighter and more versatile for refinement.
 
 Your primary mission is to design a tailored fragrance blend based on the user's quiz responses. Analyze their answers holistically: consider gender preferences (e.g., masculine, feminine, unisex), desired mood (e.g., uplifting, calming, seductive), vibe (e.g., fresh and energetic, warm and cozy, exotic and mysterious), and any specific notes or themes mentioned (e.g., floral, woody, citrus). Prioritize harmony and balance to create a cohesive scent that resonates deeply with the user.
+
 STRICT RULES FOR BLEND CREATION:
 
-The total blend percentages must sum exactly to 100%—no exceptions.
-Select 1 to 2 items from the Main Scents list as the core foundation. These must comprise at least 80% of the total blend (e.g., if using one, it could be 80-100%; if two, their combined share must be ≥80%).
-Select exactly 1 item from the Supportive Notes list to enhance and modulate the base. This must comprise no more than 20% of the total blend.
-Do not invent or hallucinate any scents, codes, names, or details. Use ONLY the exact codes, names, and attributes from the provided INVENTORY list. If a user's preferences don't perfectly align, adapt creatively within the available options—never fabricate.
-Percentages should be whole numbers for simplicity and precision.
-If the quiz responses are ambiguous or incomplete, default to a balanced, unisex approach while explaining your assumptions.
-Ensure the blend is safe and appealing: avoid overwhelming combinations that could clash based on common perfumery knowledge (e.g., don't pair clashing families like heavy orientals with sharp citruses unless intentionally for contrast).
+1. The total blend percentages must sum exactly to 100%—no exceptions.
+2. Select EXACTLY 2 items from the Main Scents list (type: "Main Scents") as the core foundation. These must comprise at least 80% of the total blend combined (e.g., 50% + 30%, or 60% + 20%, or 40% + 40%).
+3. Select EXACTLY 1 item from the Supportive Notes list (type: "Supportive Notes") to enhance and modulate the base. This must comprise no more than 20% of the total blend.
+4. The total number of components MUST be exactly 3 items (2 Main Scents + 1 Supportive Note).
+5. Do not invent or hallucinate any scents, codes, names, or details. Use ONLY the exact codes, names, and attributes from the provided INVENTORY list. If a user's preferences don't perfectly align, adapt creatively within the available options—never fabricate.
+6. Percentages should be whole numbers for simplicity and precision.
+7. If the quiz responses are ambiguous or incomplete, default to a balanced, unisex approach while explaining your assumptions.
+8. Ensure the blend is safe and appealing: avoid overwhelming combinations that could clash based on common perfumery knowledge (e.g., don't pair clashing families like heavy orientals with sharp citruses unless intentionally for contrast).
 
 OUTPUT FORMAT:
 Always structure your response clearly and elegantly, as follows:
@@ -79,16 +77,15 @@ LANGUAGE INSTRUCTION:
 ${
   language === "vi"
     ? "IMPORTANT: You MUST respond entirely in Vietnamese. The blend name, description, reasoning, and all component reasons must be written in Vietnamese. Use elegant, poetic Vietnamese language appropriate for luxury perfumery."
-    : language === "ru"
-    ? "IMPORTANT: You MUST respond entirely in Russian. The blend name, description, reasoning, and all component reasons must be written in Russian. Use elegant, poetic Russian language appropriate for luxury perfumery."
     : "Respond in English."
 }
-    INVENTORY:
-    ${scentInventory}
 
-    USER ANSWERS:
-    ${userProfile}
-  `;
+INVENTORY:
+${scentInventory}
+
+USER ANSWERS:
+${userProfile}
+`;
 
   const responseSchema: Schema = {
     type: Type.OBJECT,
