@@ -5,12 +5,13 @@ import { Suspense } from "react";
 import { PageSkeleton } from "./skeleton";
 import { Toaster } from "react-hot-toast";
 import { ScrollRestoration } from "./scroll-restoration";
+import PhoneModal from "./phone-modal";
 
 export default function Layout() {
   return (
     <div
       className="w-screen h-screen flex flex-col bg-[#FCFCFC] text-gray-900"
-      style={{ paddingTop: 'env(safe-area-inset-top)' }}
+      style={{ paddingTop: "env(safe-area-inset-top)" }}
     >
       <Header />
       <main className="flex-1 overflow-y-auto">
@@ -26,6 +27,9 @@ export default function Layout() {
         }}
       />
       <ScrollRestoration />
+
+      {/* Global Phone Required Modal - renders via portal to document.body */}
+      <PhoneModal />
     </div>
   );
 }

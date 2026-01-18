@@ -86,3 +86,7 @@ export const goBackAtom = atom(
     }
   }
 );
+
+// Global phone modal state
+export const showPhoneModalAtom = atom<boolean>(false);
+export const phoneModalCallbackAtom = atom<(() => void) | null>(null);

@@ -42,6 +42,15 @@ export interface Translations {
     submitting: string;
     error: string;
     privacy: string;
+    // Modal for phone permission
+    phoneModal: {
+      title: string;
+      content: string;
+      retry: string;
+      cancel: string;
+    };
+    // Authorization error
+    authError: string;
   };
   // Result page
   result: {
@@ -177,7 +186,7 @@ export const en: Translations = {
   contactForm: {
     title: "Your Formula is Ready",
     description:
-      "We have curated a unique blend based on your profile. Please enter your details below to save this bespoke creation to our registry and reveal the results.",
+      "We have curated a unique blend based on your profile. Tap the button below to save this bespoke creation and reveal the results.",
     nameLabel: "Full Name",
     namePlaceholder: "e.g. Jane Doe",
     phoneLabel: "Phone Number",
@@ -186,7 +195,14 @@ export const en: Translations = {
     submitting: "Saving...",
     error: "Please fill in all fields to reveal your formula.",
     privacy:
-      "Your privacy is paramount. We only use your details to associate your bespoke formula with your profile in our atelier.",
+      "Your privacy is paramount. We only use your Zalo profile to associate your bespoke formula with your account.",
+    phoneModal: {
+      title: "Phone Number Required",
+      content: "We need your phone number to save your personalized scent formula and contact you about your order. Please grant permission to continue.",
+      retry: "Try Again",
+      cancel: "Cancel",
+    },
+    authError: "Unable to get your information. Please try again.",
   },
   result: {
     eyebrow: "Your Bespoke Creation",
@@ -318,7 +334,7 @@ export const vi: Translations = {
   contactForm: {
     title: "Công Thức Của Bạn Đã Sẵn Sàng",
     description:
-      "Chúng tôi đã tạo ra một hương thơm độc đáo dựa trên hồ sơ của bạn. Vui lòng nhập thông tin bên dưới để lưu sáng tạo này và xem kết quả.",
+      "Chúng tôi đã tạo ra một hương thơm độc đáo dựa trên hồ sơ của bạn. Nhấn nút bên dưới để lưu sáng tạo này và xem kết quả.",
     nameLabel: "Họ và Tên",
     namePlaceholder: "VD: Nguyễn Văn A",
     phoneLabel: "Số Điện Thoại",
@@ -327,7 +343,14 @@ export const vi: Translations = {
     submitting: "Đang lưu...",
     error: "Vui lòng điền đầy đủ thông tin để xem công thức của bạn.",
     privacy:
-      "Quyền riêng tư của bạn là ưu tiên hàng đầu. Chúng tôi chỉ sử dụng thông tin để liên kết công thức với hồ sơ của bạn.",
+      "Quyền riêng tư của bạn là ưu tiên hàng đầu. Chúng tôi chỉ sử dụng thông tin Zalo để liên kết công thức với tài khoản của bạn.",
+    phoneModal: {
+      title: "Cần Số Điện Thoại",
+      content: "Chúng tôi cần số điện thoại của bạn để lưu công thức nước hoa và liên hệ về đơn hàng. Vui lòng cấp quyền để tiếp tục.",
+      retry: "Thử Lại",
+      cancel: "Hủy",
+    },
+    authError: "Không thể lấy thông tin của bạn. Vui lòng thử lại.",
   },
   result: {
     eyebrow: "Sáng Tạo Dành Riêng Cho Bạn",
@@ -459,7 +482,7 @@ export const ru: Translations = {
   contactForm: {
     title: "Ваша Формула Готова",
     description:
-      "Мы создали уникальный аромат на основе вашего профиля. Пожалуйста, введите свои данные ниже, чтобы сохранить это творение и увидеть результаты.",
+      "Мы создали уникальный аромат на основе вашего профиля. Нажмите кнопку ниже, чтобы сохранить это творение и увидеть результаты.",
     nameLabel: "Полное Имя",
     namePlaceholder: "Например: Иван Иванов",
     phoneLabel: "Номер Телефона",
@@ -468,7 +491,14 @@ export const ru: Translations = {
     submitting: "Сохранение...",
     error: "Пожалуйста, заполните все поля, чтобы увидеть вашу формулу.",
     privacy:
-      "Ваша конфиденциальность превыше всего. Мы используем ваши данные только для связи вашей персональной формулы с вашим профилем.",
+      "Ваша конфиденциальность превыше всего. Мы используем данные Zalo только для связи формулы с вашим аккаунтом.",
+    phoneModal: {
+      title: "Требуется Номер Телефона",
+      content: "Нам нужен ваш номер телефона, чтобы сохранить формулу аромата и связаться с вами по заказу. Пожалуйста, предоставьте разрешение.",
+      retry: "Повторить",
+      cancel: "Отмена",
+    },
+    authError: "Не удалось получить ваши данные. Пожалуйста, попробуйте снова.",
   },
   result: {
     eyebrow: "Ваше Уникальное Творение",
