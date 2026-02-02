@@ -66,15 +66,6 @@ export const resetQuizAtom = atom(
   }
 );
 
-export const startQuizAtom = atom(
-  null,
-  (get, set) => {
-    set(appStateAtom, AppState.QUIZ);
-    set(currentQuestionIndexAtom, 0);
-    set(answersAtom, {});
-  }
-);
-
 export const goBackAtom = atom(
   null,
   (get, set) => {

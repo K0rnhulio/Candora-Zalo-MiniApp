@@ -9,15 +9,6 @@ export interface Translations {
     bodyParagraph1: string;
     bodyParagraph2: string;
     ctaButton: string;
-    stats: {
-      premium: string;
-      premiumLabel: string;
-      shipping: string;
-      shippingLabel: string;
-      unique: string;
-      uniqueLabel: string;
-    };
-    badge: string;
   };
   // Quiz
   quiz: {
@@ -85,16 +76,7 @@ export const en: Translations = {
       "A fragrance designed exclusively for you. Answer 8 questions about your style, mood, and character.",
     bodyParagraph2:
       "Our system translates your answers into a formula tailored personally for you, blending high-end accords to create a fragrance that is authentically, undeniably you. We bottle your custom blend and ship it directly to your door.",
-    ctaButton: "CREATE MY SCENT NOW",
-    stats: {
-      premium: "Premium",
-      premiumLabel: "Fragrances",
-      shipping: "24h",
-      shippingLabel: "Ships In",
-      unique: "Only",
-      uniqueLabel: "Made For You",
-    },
-    badge: "Personalized",
+    ctaButton: "BEGIN YOUR SCENT JOURNEY",
   },
   quiz: {
     step: "Step",
@@ -233,16 +215,7 @@ export const vi: Translations = {
       "Một mùi hương được thiết kế riêng cho bạn. Trả lời 8 câu hỏi về phong cách, tâm trạng và tính cách của bạn.",
     bodyParagraph2:
       "Hệ thống của chúng tôi chuyển đổi câu trả lời của bạn thành công thức được cá nhân hóa, pha trộn các hương liệu cao cấp để tạo ra một mùi hương chân thực, độc đáo của riêng bạn. Chúng tôi đóng chai và giao trực tiếp đến tận nhà bạn.",
-    ctaButton: "TẠO MÙI HƯƠNG CỦA TÔI",
-    stats: {
-      premium: "Cao Cấp",
-      premiumLabel: "Nước Hoa",
-      shipping: "24h",
-      shippingLabel: "Giao Hàng",
-      unique: "Duy Nhất",
-      uniqueLabel: "Dành Cho Bạn",
-    },
-    badge: "Cá Nhân Hóa",
+    ctaButton: "BẮT ĐẦU HÀNH TRÌNH HƯƠNG THƠM",
   },
   quiz: {
     step: "Bước",
@@ -381,16 +354,7 @@ export const ru: Translations = {
       "Аромат, созданный исключительно для вас. Ответьте на 8 вопросов о вашем стиле, настроении и характере.",
     bodyParagraph2:
       "Наша система преобразует ваши ответы в персональную формулу, смешивая премиальные аккорды для создания аромата, который подлинно и неоспоримо ваш. Мы разливаем ваш индивидуальный бленд и доставляем прямо к вашей двери.",
-    ctaButton: "СОЗДАТЬ МОЙ АРОМАТ",
-    stats: {
-      premium: "Премиум",
-      premiumLabel: "Ароматы",
-      shipping: "24ч",
-      shippingLabel: "Доставка",
-      unique: "Только",
-      uniqueLabel: "Для Вас",
-    },
-    badge: "Персонализированный",
+    ctaButton: "НАЧНИТЕ СВОЙ ПУТЬ К АРОМАТУ",
   },
   quiz: {
     step: "Шаг",

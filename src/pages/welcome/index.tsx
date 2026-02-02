@@ -1,62 +1,87 @@
+import { useEffect, useRef } from "react";
 import { useLanguage, useQuiz } from "@/hooks";
+import QuizSection from "@/components/quiz-section";
 
 export default function WelcomePage() {
   const { t } = useLanguage();
-  const { handleStartQuiz } = useQuiz();
+  const { currentQuestionIndex } = useQuiz();
+  const quizRef = useRef<HTMLDivElement>(null);
+
+  const scrollToQuiz = () => {
+    quizRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    if (currentQuestionIndex > 0 && quizRef.current) {
+      quizRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [currentQuestionIndex]);
 
   return (
-    <div className="w-full px-4 py-6 animate-fade-in-up">
-      <div className="flex flex-col items-center text-center">
-        {/* Hero Image */}
-        <div className="relative mb-6 w-full max-w-xs">
-          <div className="absolute -inset-4 bg-gradient-to-br from-gold-100 to-gold-50 rounded-full blur-3xl opacity-60"></div>
-          <img
-            src="https://candora.b-cdn.net/Candrora-Perfume.jpg"
-            alt="Candora Luxury Perfume"
-            className="relative w-full rounded-2xl shadow-2xl object-cover"
-          />
-          {/* Floating accent */}
-          <div className="absolute -bottom-3 right-4 bg-black text-white px-4 py-2 rounded-full shadow-lg">
-            <span className="text-xs uppercase tracking-widest font-medium">{t.landing.badge}</span>
-          </div>
-        </div>
+    <div className="w-full animate-fade-in-up">
+      {/* Video 16:9 */}
+      <div className="aspect-video w-full bg-black">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster="https://candora.b-cdn.net/Candrora-Perfume.jpg"
+          className="w-full h-full object-cover"
+        />
+      </div>
 
-        {/* Text content */}
-        <div className="max-w-md">
-          <p className="text-xs uppercase tracking-[0.2em] text-gold-500 mb-2 font-medium">{t.landing.eyebrow}</p>
-          <h1 className="text-2xl font-serif text-black mb-3 leading-tight">
-            {t.landing.headline} <br/> <span className="text-gold-500 italic">{t.landing.headlineAccent}</span>
-          </h1>
-          <p className="text-sm text-gray-500 mb-2 font-light leading-relaxed">
-            {t.landing.bodyParagraph1}
-          </p>
-          <p className="text-sm text-gray-500 mb-6 font-light leading-relaxed">
-            {t.landing.bodyParagraph2}
-          </p>
+      {/* Short text */}
+      <div className="text-center px-4 py-4">
+        <p className="text-xs uppercase tracking-[0.2em] text-gold-500 mb-1 font-medium">
+          {t.landing.eyebrow}
+        </p>
+        <h1 className="text-2xl font-serif text-black mb-1 leading-tight">
+          {t.landing.headline}{" "}
+          <span className="text-gold-500 italic">
+            {t.landing.headlineAccent}
+          </span>
+        </h1>
+        <p className="text-sm text-gray-500 font-light leading-relaxed max-w-md mx-auto">
+          {t.landing.bodyParagraph1}
+        </p>
 
-          <button
-            onClick={handleStartQuiz}
-            className="w-full bg-black text-white px-8 py-4 rounded-full transition-all duration-300 hover:bg-gray-800 hover:shadow-2xl animate-pulse-glow"
+        {/* CTA button - scrolls to quiz */}
+        {/* <button
+          onClick={scrollToQuiz}
+          className="inline-flex items-center gap-2 bg-black text-white px-8 py-4 rounded-full transition-all duration-300 hover:bg-gray-800 hover:shadow-2xl animate-pulse-glow"
+        >
+          <span className="uppercase tracking-[0.15em] font-bold text-sm">
+            {t.landing.ctaButton}
+          </span>
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
           >
-            <span className="uppercase tracking-[0.15em] font-bold text-sm">{t.landing.ctaButton}</span>
-          </button>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 14l-7 7m0 0l-7-7m7 7V3"
+            />
+          </svg>
+        </button> */}
+      </div>
 
-          {/* Stats */}
-          <div className="mt-8 flex justify-center gap-6">
-            <div className="flex flex-col items-center">
-              <span className="font-serif text-xl text-gold-500 font-semibold">{t.landing.stats.premium}</span>
-              <span className="text-xs uppercase tracking-widest text-gray-400">{t.landing.stats.premiumLabel}</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="font-serif text-xl text-gold-500 font-semibold">{t.landing.stats.shipping}</span>
-              <span className="text-xs uppercase tracking-widest text-gray-400">{t.landing.stats.shippingLabel}</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="font-serif text-xl text-gold-500 font-semibold">{t.landing.stats.unique}</span>
-              <span className="text-xs uppercase tracking-widest text-gray-400">{t.landing.stats.uniqueLabel}</span>
-            </div>
-          </div>
-        </div>
+      {/* Divider */}
+      {/* <div className="flex items-center gap-4 px-8 py-2">
+        <div className="flex-1 h-px bg-gray-200"></div>
+        <span className="text-xs uppercase tracking-widest text-gray-400">
+          {t.quiz.step} 1 {t.quiz.of} 8
+        </span>
+        <div className="flex-1 h-px bg-gray-200"></div>
+      </div> */}
+
+      {/* Quiz section inline */}
+      <div ref={quizRef}>
+        <QuizSection />
       </div>
     </div>
   );

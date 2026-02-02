@@ -4,10 +4,11 @@ import { useLanguage, useQuiz } from "@/hooks";
 import { useSetAtom } from "jotai";
 import { showPhoneModalAtom, phoneModalCallbackAtom } from "@/state";
 import { decodePhoneToken } from "@/services/phoneService";
+import { sendScentRevealZNS } from "@/services/znsService";
 
 export default function ContactPage() {
   const { t } = useLanguage();
-  const { handleContactSubmit } = useQuiz();
+  const { handleContactSubmit, result } = useQuiz();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const setShowPhoneModal = useSetAtom(showPhoneModalAtom);
   const setPhoneModalCallback = useSetAtom(phoneModalCallbackAtom);
@@ -141,14 +142,34 @@ export default function ContactPage() {
         return;
       }
 
-      // Step 5: Submit the contact info and proceed
+      // Step 5: Send ZNS notification with scent reveal
+      if (result && userPhone) {
+        console.log("Sending ZNS notification...");
+        try {
+          const znsResult = await sendScentRevealZNS(
+            userPhone,
+            userName,
+            result.blendName,
+            result.reasoning
+          );
+          console.log("ZNS result:", znsResult);
+          if (!znsResult.success) {
+            console.warn("ZNS sending failed, but continuing:", znsResult.error);
+          }
+        } catch (znsError) {
+          console.error("ZNS error:", znsError);
+          // Don't block the flow if ZNS fails
+        }
+      }
+
+      // Step 6: Submit the contact info and proceed to result page
       await handleContactSubmit({ name: userName, phone: userPhone });
       setIsSubmitting(false);
     } catch (err) {
       console.error("Unexpected error:", err);
       setIsSubmitting(false);
     }
-  }, [handleContactSubmit, setPhoneModalCallback, setShowPhoneModal]);
+  }, [handleContactSubmit, setPhoneModalCallback, setShowPhoneModal, result]);
 
   return (
     <div className="w-full px-4 py-6 animate-fade-in-up h-full">

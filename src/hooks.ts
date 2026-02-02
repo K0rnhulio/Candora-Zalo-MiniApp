@@ -10,7 +10,6 @@ import {
   answersAtom,
   resultAtom,
   resetQuizAtom,
-  startQuizAtom,
   goBackAtom,
   totalQuestionsAtom,
 } from "@/state";
@@ -59,7 +58,6 @@ export function useQuiz() {
   const totalQuestions = useAtomValue(totalQuestionsAtom);
   const { language, t } = useLanguage();
   const resetQuiz = useSetAtom(resetQuizAtom);
-  const startQuiz = useSetAtom(startQuizAtom);
   const goBack = useSetAtom(goBackAtom);
 
   const questions = t.quiz.questions;
@@ -106,21 +104,13 @@ export function useQuiz() {
   const handleBack = useCallback(() => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(prev => prev - 1);
-    } else {
-      setAppState(AppState.WELCOME);
-      navigate('/');
     }
-  }, [currentQuestionIndex, setCurrentQuestionIndex, setAppState, navigate]);
+  }, [currentQuestionIndex, setCurrentQuestionIndex]);
 
   const handleRestart = useCallback(() => {
     resetQuiz();
     navigate('/');
   }, [resetQuiz, navigate]);
-
-  const handleStartQuiz = useCallback(() => {
-    startQuiz();
-    navigate('/quiz');
-  }, [startQuiz, navigate]);
 
   return {
     appState,
@@ -134,7 +124,6 @@ export function useQuiz() {
     handleContactSubmit,
     handleBack,
     handleRestart,
-    handleStartQuiz,
   };
 }
 

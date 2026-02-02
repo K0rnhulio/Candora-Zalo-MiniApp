@@ -1,13 +1,13 @@
 import { useLanguage, useQuiz } from "@/hooks";
 
-export default function QuizPage() {
+export default function QuizSection() {
   const { t } = useLanguage();
   const {
     currentQuestionIndex,
     currentQuestion,
     totalQuestions,
     handleAnswer,
-    handleBack
+    handleBack,
   } = useQuiz();
 
   if (!currentQuestion) {
@@ -18,15 +18,17 @@ export default function QuizPage() {
   const progress = (currentStep / totalQuestions) * 100;
 
   return (
-    <div className="w-full px-4 py-6">
+    <div id="quiz-section" className="w-full px-4 pb-6 pt-2">
       <div className="max-w-2xl mx-auto">
         {/* Step indicator */}
         <div className="mb-6 flex justify-between items-center text-gold-700 text-sm tracking-widest uppercase">
-          <span>{t.quiz.step} {currentStep} {t.quiz.of} {totalQuestions}</span>
+          <span>
+            {t.quiz.step} {currentStep} {t.quiz.of} {totalQuestions}
+          </span>
           <button
             onClick={handleBack}
             disabled={currentStep === 1}
-            className={`hover:text-black transition-colors ${currentStep === 1 ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+            className={`hover:text-black transition-colors ${currentStep === 1 ? "opacity-0 pointer-events-none" : "opacity-100"}`}
           >
             {t.quiz.back}
           </button>
