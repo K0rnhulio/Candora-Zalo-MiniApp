@@ -95,7 +95,22 @@ export function useQuiz() {
 
   const handleContactSubmit = useCallback(async (userInfo: UserInfo) => {
     if (result) {
-      await saveToDatabase(userInfo, answers, result);
+      // Save to DB with timeout - don't block navigation to result
+      const saveWithTimeout = Promise.race([
+        saveToDatabase(userInfo, answers, result),
+        new Promise<boolean>((resolve) => setTimeout(() => {
+          console.warn("Database save timed out after 10s, proceeding to result");
+          resolve(false);
+        }, 10000)),
+      ]);
+
+      saveWithTimeout
+        .then((success) => {
+          if (!success) console.warn("Database save failed or timed out");
+        })
+        .catch((err) => console.error("Database save error:", err));
+
+      // Navigate to result immediately - don't wait for DB
       setAppState(AppState.RESULT);
       navigate('/result');
     }

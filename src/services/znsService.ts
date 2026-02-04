@@ -26,7 +26,12 @@ export async function sendZNS(
   oaId: string
 ): Promise<SendZNSResponse> {
   try {
-    const response = await fetch(`${SUPABASE_URL}functions/v1/send-zns`, {
+    // Add timeout to prevent hanging forever
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
+    const baseUrl = SUPABASE_URL?.endsWith('/') ? SUPABASE_URL : `${SUPABASE_URL}/`;
+    const response = await fetch(`${baseUrl}functions/v1/send-zns`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -38,7 +43,9 @@ export async function sendZNS(
         template_id: templateId,
         template_data: templateData,
       }),
+      signal: controller.signal,
     });
+    clearTimeout(timeoutId);
 
     const data = await response.json();
     console.log("🚀 ~ sendZNS ~ data:", data);

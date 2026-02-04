@@ -69,42 +69,42 @@ export const ALL_SCENTS = [...PERFUMES, ...CANDLE_SCENTS];
 export const QUESTIONS = [
   {
     id: 1,
-    text: "Are you looking for a masculine, feminine, or unisex fragrance composition?",
-    options: ["Masculine", "Feminine", "Unisex"]
+    text: "Let's start with the foundation. What kind of energy should this fragrance radiate?",
+    options: ["Deep, bold, and masculine leaning", "Soft, elegant, and feminine leaning", "Neutral, modern, and fluid (Unisex)"]
   },
   {
     id: 2,
-    text: "How would you describe your current mood or the vibe you want to achieve?",
-    options: ["Energetic & Playful", "Calm & Meditative", "Romantic & Passionate", "Focused & Sharp", "Luxurious & Sophisticated"]
+    text: "You've just sprayed it on. How does the opening moment make you feel?",
+    options: ["Awake and Electric", "Calm and Centered", "Wrapped in Mystery", "Clean and Polished"]
   },
   {
     id: 3,
-    text: "Which scent family naturally appeals to you the most?",
-    options: ["Fresh & Citrusy", "Floral & Romantic", "Woody & Earthy", "Sweet & Gourmand", "Spicy & Exotic"]
+    text: "If this scent were a drink or a treat, what would it be?",
+    options: ["A crisp Gin & Tonic with extra lime", "A rich, dark espresso or spiced chai", "A glass of rosé in a garden", "Vanilla bourbon or a warm pastry"]
   },
   {
     id: 4,
-    text: "Where do you envision yourself wearing this scent?",
-    options: ["A professional work setting", "A cozy night at home", "An outdoor adventure", "A glamorous evening event", "A casual daily outing"]
+    text: "Close your eyes. Where are you when you're wearing this signature mix?",
+    options: ["Domination mode: Boardrooms and city streets", "Intimate mode: Candlelight and close quarters", "Escape mode: Ocean air or deep woods", "Comfort mode: Fresh sheets and a rainy Sunday"]
   },
   {
     id: 5,
-    text: "If you were a season, which one would you be?",
-    options: ["Spring (Fresh, blooming)", "Summer (Bright, warm)", "Autumn (Cozy, spicy)", "Winter (Crisp, deep)"]
+    text: "What is the perfect 'temperature' for this scent?",
+    options: ["Sunlight on skin (Warm, bright)", "Cool morning mist (Crisp, airy)", "A crackling fireplace (Cozy, smoky)", "Midnight air (Cool, deep)"]
   },
   {
     id: 6,
-    text: "How do you want to be perceived by others?",
-    options: ["Approachable & Friendly", "Mysterious & Alluring", "Confident & Powerful", "Clean & Put-together"]
+    text: "You walk past someone and leave a scent trail. What do they think?",
+    "options": ["That person is effortlessly cool", "That person is powerful", "That person is dangerously attractive", "That person is clean and trustworthy"]
   },
   {
     id: 7,
-    text: "Which of these textures resonates with you?",
-    options: ["Smooth Silk", "Crisp Linen", "Warm Velvet", "Cool Stone", "Soft Cashmere"]
+    text: "If you could touch this scent, what would it feel like?",
+    options: ["Crisp white linen", "Heavy black velvet", "Warm cashmere sweater", "Cool polished stone"]
   },
   {
     id: 8,
-    text: "What is your primary goal with this fragrance?",
-    options: ["To boost my energy", "To help me relax/sleep", "To feel attractive", "To ground myself", "To spark creativity"]
+    text: "Finally, what is the 'Job' this perfume needs to do for you?",
+    options: ["Confidence Armor: Make me feel invincible", "Seduction Tool: Make me irresistible", "Mood Lifter: Make me feel happy", "Stress Buster: Make me feel grounded"]
   }
 ];

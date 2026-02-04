@@ -142,24 +142,22 @@ export default function ContactPage() {
         return;
       }
 
-      // Step 5: Send ZNS notification with scent reveal
+      // Step 5: Send ZNS notification (fire and forget - don't block the flow)
       if (result && userPhone) {
-        console.log("Sending ZNS notification...");
-        try {
-          const znsResult = await sendScentRevealZNS(
-            userPhone,
-            userName,
-            result.blendName,
-            result.reasoning
-          );
+        console.log("Sending ZNS notification (non-blocking)...");
+        sendScentRevealZNS(
+          userPhone,
+          userName,
+          result.blendName,
+          result.reasoning
+        ).then(znsResult => {
           console.log("ZNS result:", znsResult);
           if (!znsResult.success) {
-            console.warn("ZNS sending failed, but continuing:", znsResult.error);
+            console.warn("ZNS sending failed:", znsResult.error);
           }
-        } catch (znsError) {
+        }).catch(znsError => {
           console.error("ZNS error:", znsError);
-          // Don't block the flow if ZNS fails
-        }
+        });
       }
 
       // Step 6: Submit the contact info and proceed to result page
