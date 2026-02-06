@@ -56,6 +56,7 @@ export interface Translations {
   loading: {
     title: string;
     subtitle: string;
+    steps: string[];
   };
   // Footer
   footer: string;
@@ -157,6 +158,12 @@ export const en: Translations = {
   loading: {
     title: "Crafting Your Signature Scent",
     subtitle: "Our AI perfumer is analyzing your preferences...",
+    steps: [
+      "Analyzing your personality type...",
+      "Matching base notes...",
+      "Calculated match: {percentage}%...",
+      "Blending final accord...",
+    ],
   },
   footer: "Candora",
   languageSelector: {
@@ -256,6 +263,12 @@ export const vi: Translations = {
   loading: {
     title: "Đang Tạo Mùi Hương Của Bạn",
     subtitle: "Chuyên gia nước hoa AI đang phân tích sở thích của bạn...",
+    steps: [
+      "Đang phân tích tính cách của bạn...",
+      "Đang tìm kiếm nốt hương phù hợp...",
+      "Độ phù hợp: {percentage}%...",
+      "Đang pha chế hương thơm cuối cùng...",
+    ],
   },
   footer: "Candora",
   languageSelector: {
@@ -355,6 +368,12 @@ export const ru: Translations = {
   loading: {
     title: "Создаём Ваш Аромат",
     subtitle: "парфюмер анализирует ваши предпочтения...",
+    steps: [
+      "Анализируем ваш тип личности...",
+      "Подбираем базовые ноты...",
+      "Совпадение: {percentage}%...",
+      "Создаём финальный аккорд...",
+    ],
   },
   footer: "Candora",
   languageSelector: {

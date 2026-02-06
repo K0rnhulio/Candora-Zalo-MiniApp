@@ -76,19 +76,26 @@ export function useQuiz() {
     } else {
       // Quiz finished, navigate to loading and generate content
       setAppState(AppState.LOADING);
-      navigate('/loading');
+
+      // Use requestAnimationFrame + setTimeout to ensure ZMA is ready
+      await new Promise(resolve => {
+        requestAnimationFrame(() => {
+          setTimeout(resolve, 50);
+        });
+      });
+      navigate('/loading', { replace: true });
 
       try {
         const blendResult = await generateBlend(newAnswers, language);
         setResult(blendResult);
         // Once generated, move to contact form
         setAppState(AppState.CONTACT_FORM);
-        navigate('/contact');
+        navigate('/contact', { replace: true });
       } catch (e) {
         console.error("Failed to generate", e);
         toast.error("Failed to generate your blend. Please try again.");
         setAppState(AppState.WELCOME);
-        navigate('/');
+        navigate('/', { replace: true });
       }
     }
   }, [answers, currentQuestionIndex, language, questions, navigate, setAnswers, setAppState, setCurrentQuestionIndex, setResult]);
@@ -112,7 +119,7 @@ export function useQuiz() {
 
       // Navigate to result immediately - don't wait for DB
       setAppState(AppState.RESULT);
-      navigate('/result');
+      navigate('/result', { replace: true });
     }
   }, [result, answers, setAppState, navigate]);
 
@@ -124,7 +131,7 @@ export function useQuiz() {
 
   const handleRestart = useCallback(() => {
     resetQuiz();
-    navigate('/');
+    navigate('/', { replace: true });
   }, [resetQuiz, navigate]);
 
   return {
