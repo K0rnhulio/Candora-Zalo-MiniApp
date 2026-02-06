@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/hooks";
 
+// Images for each loading step - replace with actual images later
+const STEP_IMAGES = [
+  "https://candora.b-cdn.net/Candrora-Perfume.jpg", // Step 0: Analyzing personality
+  "https://candora.b-cdn.net/Candrora-Perfume.jpg", // Step 1: Matching base notes
+  "https://candora.b-cdn.net/Candrora-Perfume.jpg", // Step 2: Calculated match
+  "https://candora.b-cdn.net/Candrora-Perfume.jpg", // Step 3: Blending final accord
+];
+
 export default function LoadingPage() {
   const { t } = useLanguage();
   const [step, setStep] = useState(0);
@@ -10,7 +18,7 @@ export default function LoadingPage() {
     if (step >= 3) return;
     const timer = setTimeout(() => {
       setStep((prev) => prev + 1);
-    }, 1500);
+    }, 2000);
     return () => clearTimeout(timer);
   }, [step]);
 
@@ -18,12 +26,13 @@ export default function LoadingPage() {
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center px-6 py-8">
-      {/* Image with overlay spinner */}
+      {/* Image with overlay spinner - changes with each step */}
       <div className="relative w-48 h-48 mb-8">
         <img
-          src="https://candora.b-cdn.net/Candrora-Perfume.jpg"
+          key={step}
+          src={STEP_IMAGES[step]}
           alt="Perfume"
-          className="w-full h-full object-cover rounded-2xl shadow-lg"
+          className="w-full h-full object-cover rounded-2xl shadow-lg animate-fade-in"
         />
         {/* Overlay with spinner */}
         <div className="absolute inset-0 bg-black/20 rounded-2xl flex items-center justify-center">
