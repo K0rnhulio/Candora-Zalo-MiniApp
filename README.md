@@ -1,123 +1,117 @@
-# ZaUI Fashion
+# Candora - Personalized Scent Quiz
 
-<p style="display: flex; flex-wrap: wrap; gap: 4px">
-  <img alt="vite" src="https://img.shields.io/github/package-json/dependency-version/Zalo-MiniApp/zaui-fashion/dev/vite" />
-  <img alt="react" src="https://img.shields.io/github/package-json/dependency-version/Zalo-MiniApp/zaui-fashion/react" />
-  <img alt="zmp-ui" src="https://img.shields.io/github/package-json/dependency-version/Zalo-MiniApp/zaui-fashion/zmp-ui" />
-  <img alt="zmp-sdk" src="https://img.shields.io/github/package-json/dependency-version/Zalo-MiniApp/zaui-fashion/zmp-sdk" />
-  <img alt="jotai" src="https://img.shields.io/github/package-json/dependency-version/Zalo-MiniApp/zaui-fashion/jotai" />
-  <img alt="tailwindcss" src="https://img.shields.io/github/package-json/dependency-version/Zalo-MiniApp/zaui-fashion/dev/tailwindcss" />
-</p>
+A Zalo Mini App that creates personalized perfume recommendations through an interactive quiz experience.
 
-A template for online sales applications. It provides full features such as product viewing, shopping cart, payment, etc. Can be used for various industries.
+## Features
 
-|                      Demo                       |                  Entrypoint                  |
-| :---------------------------------------------: | :------------------------------------------: |
-| <img src="./docs/preview.webp" alt="Home page"> | <img src="./docs/qr.webp" alt="Entry point"> |
+- **Interactive Quiz**: 8-question personality quiz to determine scent preferences
+- **AI-Powered Recommendations**: Uses Google Gemini AI to generate personalized perfume formulas
+- **Multi-language Support**: English, Vietnamese, and Russian
+- **Beautiful Loading Experience**: Animated loading screen with progress indicators
+- **Mobile-First Design**: Optimized for touch devices and Zalo Mini App environment
+
+## Tech Stack
+
+- **Framework**: React 18 + TypeScript
+- **Build Tool**: Vite 5
+- **Styling**: Tailwind CSS + SCSS
+- **State Management**: Jotai
+- **Routing**: React Router DOM
+- **AI Integration**: Google Gemini API
+- **Platform**: Zalo Mini App SDK
 
 ## Setup
 
-### Using Zalo Mini App Extension
+### Prerequisites
 
-1. Install [Visual Studio Code](https://code.visualstudio.com/download) and [Zalo Mini App Extension](https://mini.zalo.me/docs/dev-tools).
-1. Click on **Create Project** > Choose **ZaUI Fashion** template > Wait until the generated project is ready.
-1. **Configure App ID** and **Install Dependencies**, then navigate to the **Run** panel > **Start** to develop your Mini App 🚀
+- [Node.js](https://nodejs.org/) (v18+)
+- [Zalo Mini App Extension](https://mini.zalo.me/docs/dev-tools) for VS Code
 
-### Using Zalo Mini App CLI
+### Installation
 
-> **Note:** Vite 5 compatibility in CLI is under development. Until then, please use the Zalo Mini App Extension.
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd Candora-Zalo-MiniApp
+   ```
 
-1. [Install Node JS](https://nodejs.org/en/download/).
-1. [Install Zalo Mini App CLI](https://mini.zalo.me/docs/dev-tools/cli/intro/).
-1. **Download** or **clone** this repository.
-1. **Install dependencies**:
+2. Install dependencies:
    ```bash
    npm install
    ```
-1. **Start** the dev server using `zmp-cli`:
+
+3. Start development server:
    ```bash
-   zmp start
+   npm start
    ```
-1. **Open** `localhost:3000` in your browser and start coding 🔥
 
-### Using Zalo Mini App Studio
+### Environment Variables
 
-This template is built using **Vite 5.x**, which is **not compatible** with Zalo Mini App Studio.
+Create environment variables or update `app-config.json`:
+
+- `GEMINI_API_KEY`: Google Gemini API key for AI recommendations
+
+## Project Structure
+
+```
+src/
+├── components/       # Reusable React components
+│   ├── quiz-section.tsx
+│   ├── layout.tsx
+│   └── ...
+├── pages/           # Page components
+│   ├── welcome/     # Landing + Quiz page
+│   ├── loading/     # Loading screen with animations
+│   ├── contact/     # User info form
+│   └── result/      # Personalized recommendation
+├── i18n/            # Internationalization
+│   └── translations.ts
+├── services/        # API services
+│   ├── geminiService.ts
+│   └── dbService.ts
+├── css/             # Stylesheets
+├── hooks.ts         # Custom React hooks
+├── state.ts         # Jotai state atoms
+├── router.tsx       # Route configuration
+└── app.ts           # App entry point
+```
 
 ## Deployment
 
-1. **Create** a Zalo Mini App ID. For instructions, please refer to the [Coffee Shop Tutorial](https://mini.zalo.me/tutorial/coffee-shop/step-1/).
-
-1. **Deploy** your mini program to Zalo using the ID created.
-
-   If you’re using Zalo Mini App Extension: navigate to the Deploy panel > Login > Deploy.
-
-   If you’re using `zmp-cli`:
-
+1. Login to Zalo Mini App:
    ```bash
    zmp login
+   ```
+
+2. Deploy:
+   ```bash
    zmp deploy
    ```
 
-1. Scan the **QR code** using Zalo to preview your mini program.
+## Customization
 
-## Usage:
+### Translations
 
-The repository contains sample UI components for building your application. You may [integrate your APIs](#load-data-from-your-server) to load categories, products, and process orders. You may also modify the code to suit your business needs.
+Edit `src/i18n/translations.ts` to modify text content for each language.
 
-Folder structure:
+### Loading Images
 
-- **`src`**: Contains all the logic source code of your Mini App. Inside the `src` folder:
+Update the `STEP_IMAGES` array in `src/pages/loading/index.tsx` to customize loading screen images.
 
-  - **`components`**: Reusable components written in React.js.
-  - **`css`**: Stylesheets; pre-processors are also supported.
-  - **`mock`**: Example data as json files.
-  - **`pages`**: A Page is a React component registered in the router that represents a full view. Smaller sections within the page can be components for better maintainability, though they don’t necessarily need to be reusable.
-  - **`static`**: Static assets to be deployed along with your Mini App. Notice: large static assets should be served from a CDN.
-  - **`utils`**: Reusable utility functions, such as API integration, client-side cart management, formatting, etc.
-  - **`app.tsx`**: Root component of your entire Mini App. React DOM will mount this component to the element `#app`.
-  - **`global.d.ts`**: Contains TypeScript declarations for third-party modules and global objects.
-  - **`hooks.ts`**: Custom utility hooks.
-  - **`router.ts`**: Router configuration. New pages should be registered here.
-  - **`state.ts`**: Global state management. Jotai is used for simplicity and performance.
-  - **`types.d.ts`**: TypeScript declarations for business related objects.
+### Theme Colors
 
-- **`app-config.json`**: [Zalo Mini App Configuration](https://mini.zalo.me/documents/intro/getting-started/app-config/).
+Modify gold color palette in `tailwind.config.js`:
+```js
+gold: {
+  50: '#fefce8',
+  100: '#F9F1D8',
+  300: '#fde047',
+  500: '#D4AF37',
+  700: '#B8860B',
+  800: '#92400e',
+}
+```
 
-The other files (such as `tailwind.config.js`, `vite.config.mts`, `tsconfig.json`, `postcss.config.js`, `.eslintrc.js`, and `.prettierrc`) are configurations for libraries used in your application. Visit the library's documentation to learn how to use them.
+## License
 
-## Recipes
-
-### Load data from your server
-
-1. In `app-config.json`, set `template.apiUrl` to your API URL.
-   ```json
-   "template": {
-      "apiUrl": "https://my-server.com/api/", // Set this to your API URL
-   }
-   ```
-1. Your server should implement the following APIs:
-   - `GET  /categories`: Retrieve a list of categories.
-   - `GET  /products`: Retrieve a list of products.
-   - `GET  /banners`: Retrieve a list of banner images to display on the home page.
-
-> Refer to the `src/mock/*.json` files for sample data and structure.
-
-> You may wish to add more APIs to support your business needs. For authorization required APIs, the user's identity can be retrieved from the `Authorization: Bearer ${ACCESS_TOKEN}` header sent along with each API request. Visit the [Login with Zalo](https://mini.zalo.me/intro/authen-user/) documentation for more detailed instructions.
-
-### Link Official Account
-
-The template contains 2 OA-related features:
-
-| Feature             | Demo                                        | Configuration                                                                                                                                                                                                                                                               |
-| ------------------- | ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Chat with OA button | ![Chat with OA Button](./docs/chat-oa.webp) | In `app-config.json`, set `template.oaIDtoOpenChat` to your OA ID.                                                                                                                                                                                                          |
-| Follow OA widget    | ![Follow OA Block](./docs/follow-oa.webp)   | Follow the instructions to [authenticate your Mini App via Zalo OA](https://mini.zalo.me/documents/pages/thong-bao-huong-dan-xac-thuc-mini-app/). For more information, please refer to the [showOAWidget](https://mini.zalo.me/documents/api/showOAWidget/) documentation. |
-
-### Customize theme
-
-Adjust CSS variables in `src/css/tailwind.scss` as needed to fit your desired branding.
-
-| `--primary: red;`                     | `--primary: #008000;`                     |
-| ------------------------------------- | ----------------------------------------- |
-| ![Red](./docs/primary-color-red.webp) | ![Green](./docs/primary-color-green.webp) |
+Private - All rights reserved.
